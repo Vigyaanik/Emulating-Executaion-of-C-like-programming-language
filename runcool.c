@@ -147,15 +147,24 @@ int execute_stackmachine(void)
                 break;
             
             case I_SUB:
-
+                value1 = read_memory(SP);
+                SP++;
+                value2 = read_memory(SP);
+                write_memory(SP, value2 - value1);
                 break;
             
             case I_MULT:
-
+                value1 = read_memory(SP);
+                SP++;
+                value2 = read_memory(SP);
+                write_memory(SP, value1 * value2);
                 break;
             
             case I_DIV:
-
+                value1 = read_memory(SP);
+                SP++;
+                value2 = read_memory(SP);
+                write_memory(SP, value2 / value1);
                 break;
             
             case I_CALL:
