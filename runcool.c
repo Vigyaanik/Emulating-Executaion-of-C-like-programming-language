@@ -29,22 +29,22 @@ AWORD                       main_memory[N_MAIN_MEMORY_WORDS];
 //  see:  https://teaching.csse.uwa.edu.au/units/CITS2002/projects/coolinstructions.php
 enum INSTRUCTION {
     I_HALT       = 0,
-    I_NOP,
-    I_ADD,
-    I_SUB,
-    I_MULT,
-    I_DIV,
-    I_CALL,
-    I_RETURN,
-    I_JMP,
-    I_JEQ,
-    I_PRINTI,
-    I_PRINTS,
-    I_PUSHC,
-    I_PUSHA,
-    I_PUSHR,
-    I_POPA,
-    I_POPR
+    I_NOP        = 1,
+    I_ADD        = 2,
+    I_SUB        = 3,
+    I_MULT       = 4,
+    I_DIV        = 5,
+    I_CALL       = 6,
+    I_RETURN     = 7,
+    I_JMP        = 8,
+    I_JEQ        = 9,
+    I_PRINTI     = 10,
+    I_PRINTS     = 11,
+    I_PUSHC      = 12,
+    I_PUSHA      = 13,
+    I_PUSHR      = 14,
+    I_POPA       = 15,
+    I_POPR       = 16,
 };
 
 //  USE VALUES OF enum INSTRUCTION TO INDEX THE INSTRUCTION_name[] ARRAY
