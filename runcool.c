@@ -1,6 +1,6 @@
 //  CITS2002 Project 1 2021
 //  Name(s):             Joshia Nambi   , Divyanshu Siwach
-//  Student number(s):   22976423 , student-number2
+//  Student number(s):   22976423 , 22912646
 
 //  compile with:  cc -std=c11 -Wall -Werror -o runcool runcool.c
 
