@@ -1,6 +1,6 @@
 //  CITS2002 Project 1 2021
-//  Name(s):             student-name1   (, student-name2)
-//  Student number(s):   student-number1 (, student-number2)
+//  Name(s):             Joshia Nambi   , Divyanshu Siwach
+//  Student number(s):   22976423 , student-number2
 
 //  compile with:  cc -std=c11 -Wall -Werror -o runcool runcool.c
 
@@ -93,13 +93,13 @@ void report_statistics(void)
 //  THIS WILL MAKE THINGS EASIER WHEN WHEN EXTENDING THE CODE TO
 //  SUPPORT CACHE MEMORY
 
-AWORD read_memory(int address)
-{
+AWORD read_memory(int address) {
+    n_main_memory_reads++;
     return main_memory[address];
 }
 
-void write_memory(AWORD address, AWORD value)
-{
+void write_memory(AWORD address, AWORD value) {
+    n_main_memory_writes++;
     main_memory[address] = value;
 }
 
@@ -118,6 +118,9 @@ int execute_stackmachine(void)
 
     while(true) {
 
+        IWORD value1;
+        IWORD value2;
+
 //  FETCH THE NEXT INSTRUCTION TO BE EXECUTED
         IWORD instruction   = read_memory(PC);
         ++PC;
@@ -130,6 +133,83 @@ int execute_stackmachine(void)
 
 //  SUPPORT OTHER INSTRUCTIONS HERE
 //      ....
+        switch (instruction) {
+
+            case I_NOP:
+
+                break;
+            
+            case I_ADD:
+                value1 = read_memory(SP);
+                SP++;
+                value2 = read_memory(SP);
+                write_memory(SP, value1 + value2);                 
+                break;
+            
+            case I_SUB:
+
+                break;
+            
+            case I_MULT:
+
+                break;
+            
+            case I_DIV:
+
+                break;
+            
+            case I_CALL:
+
+                break;
+            
+            case I_RETURN:
+
+                break;
+            
+            case I_JMP:
+
+                break;
+            
+            case I_JEQ:
+
+                break;
+            
+            case I_PRINTI:
+
+                break;
+            
+            case I_PRINTS:
+
+                break;
+            
+            case I_PUSHC:
+                value1 = read_memory(PC);
+                PC++;
+                SP--;
+                write_memory(SP, value1);
+                
+                break;
+            
+            case I_PUSHA:
+
+                break;
+            
+            case I_PUSHR:
+
+                break;
+            
+            case I_POPA:
+
+                break;
+            
+            case I_POPR:
+
+                break;
+        }
+
+
+
+
     }
 
 //  THE RESULT OF EXECUTING THE INSTRUCTIONS IS FOUND ON THE TOP-OF-STACK
