@@ -1,6 +1,6 @@
 //  CITS2002 Project 1 2021
-//  Name(s):             Joshia Nambi   , Divyanshu Siwach
-//  Student number(s):   22976423 , 22912646
+//  Name(s):             student-name1   (, student-name2)
+//  Student number(s):   student-number1 (, student-number2)
 
 //  compile with:  cc -std=c11 -Wall -Werror -o runcool runcool.c
 
@@ -44,7 +44,7 @@ enum INSTRUCTION {
     I_PUSHA,
     I_PUSHR,
     I_POPA,
-    I_POPR,
+    I_POPR
 };
 
 //  USE VALUES OF enum INSTRUCTION TO INDEX THE INSTRUCTION_name[] ARRAY
@@ -93,13 +93,15 @@ void report_statistics(void)
 //  THIS WILL MAKE THINGS EASIER WHEN WHEN EXTENDING THE CODE TO
 //  SUPPORT CACHE MEMORY
 
-AWORD read_memory(int address) {
-    n_main_memory_reads++;
+AWORD read_memory(int address)
+{
+    ++n_main_memory_reads;
     return main_memory[address];
 }
 
-void write_memory(AWORD address, AWORD value) {
-    n_main_memory_writes++;
+void write_memory(AWORD address, AWORD value)
+{
+    ++n_main_memory_writes;
     main_memory[address] = value;
 }
 
@@ -117,10 +119,10 @@ int execute_stackmachine(void)
     FP = FP+0;
 
     while(true) {
-
         IWORD value1;
         IWORD value2;
-
+        IWORD offset;
+        AWORD adress_val;
 //  FETCH THE NEXT INSTRUCTION TO BE EXECUTED
         IWORD instruction   = read_memory(PC);
         ++PC;
@@ -135,90 +137,93 @@ int execute_stackmachine(void)
 //      ....
         switch (instruction) {
 
-            case I_NOP:
+        case I_NOP:
+            /* code */
 
-                break;
-            
-            case I_ADD:
-                value1 = read_memory(SP);
-                SP++;
-                value2 = read_memory(SP);
-                write_memory(SP, value1 + value2);                 
-                break;
-            
-            case I_SUB:
-                value1 = read_memory(SP);
-                SP++;
-                value2 = read_memory(SP);
-                write_memory(SP, value2 - value1);
-                break;
-            
-            case I_MULT:
-                value1 = read_memory(SP);
-                SP++;
-                value2 = read_memory(SP);
-                write_memory(SP, value1 * value2);
-                break;
-            
-            case I_DIV:
-                value1 = read_memory(SP);
-                SP++;
-                value2 = read_memory(SP);
-                write_memory(SP, value2 / value1);
-                break;
-            
-            case I_CALL:
-
-                break;
-            
-            case I_RETURN:
-
-                break;
-            
-            case I_JMP:
-
-                break;
-            
-            case I_JEQ:
-
-                break;
-            
-            case I_PRINTI:
-
-                break;
-            
-            case I_PRINTS:
-
-                break;
-            
-            case I_PUSHC:
-                value1 = read_memory(PC);
+            break;
+        case I_ADD:
+            value1 = read_memory(SP++);
+            value2 = read_memory(SP);
+            write_memory(SP, value1 + value2);
+            break;
+        case I_SUB:
+            value1 = read_memory(SP++);
+            value2 = read_memory(SP);
+            write_memory(SP, value2 - value1);
+            break;
+        case I_MULT:
+            value1 = read_memory(SP++);
+            value2 = read_memory(SP);
+            write_memory(SP, value1 * value2);
+            break;
+        case I_DIV:
+            value1 = read_memory(SP++);
+            value2 = read_memory(SP);
+            write_memory(SP, value2 / value1);
+            break;
+        case I_CALL:
+            adress_val = read_memory(PC++);
+            write_memory(--SP, PC); 
+            write_memory(--SP, FP);
+            FP = SP;
+            PC = adress_val;
+            break;
+        case I_RETURN:
+            // temp_address = read_memory(PC++);
+            // FP_new = FP + temp_address;
+            adress_val = FP + read_memory(PC++);
+            value1 = read_memory(SP++);
+            SP = FP;
+            FP = read_memory(SP++);
+            PC = read_memory(SP++);
+            SP = adress_val;
+            write_memory(adress_val, value1);
+            break;
+        case I_JMP:
+            PC = read_memory(PC);
+            break;
+        case I_JEQ:
+            value1 = read_memory(SP++);
+            if (value1 == 0)
+            {
+                PC = read_memory(PC);
+            }
+            else {
                 PC++;
-                SP--;
-                write_memory(SP, value1);
-                
-                break;
-            
-            case I_PUSHA:
-
-                break;
-            
-            case I_PUSHR:
-
-                break;
-            
-            case I_POPA:
-
-                break;
-            
-            case I_POPR:
-
-                break;
+            }
+            break;
+        case I_PRINTI:
+            printf("%i", read_memory(SP++));
+            break;
+        case I_PRINTS:
+            break;
+        case I_PUSHC:
+            value1 = read_memory(PC++);
+            write_memory(--SP, value1);
+            break;
+        case I_PUSHA:
+            adress_val = read_memory(PC++);
+            value1 = read_memory(adress_val);
+            write_memory(--SP, adress_val);
+            break;
+        case I_PUSHR:
+            offset = read_memory(PC++);
+            adress_val = FP + offset;
+            value1 = read_memory(adress_val);
+            write_memory(--SP, value1);
+            break;
+        case I_POPA:
+            adress_val = read_memory(PC++);
+            value1 = read_memory(SP++);
+            write_memory(adress_val, value1);
+            break;
+        case I_POPR:
+            offset = read_memory(PC++);
+            adress_val = FP + offset;
+            value1 = read_memory(SP++);
+            write_memory(adress_val, value1);
+            break;
         }
-
-
-
-
     }
 
 //  THE RESULT OF EXECUTING THE INSTRUCTIONS IS FOUND ON THE TOP-OF-STACK
@@ -233,6 +238,45 @@ void read_coolexe_file(char filename[])
     memset(main_memory, 0, sizeof main_memory);   //  clear all memory
 
 //  READ CONTENTS OF coolexe FILE
+    // File pointer to hold reference to our file
+    FILE * content;
+    content = fopen(filename, "r");
+    // char ch;
+
+    // fopen() return NULL if last operation was unsuccessful
+    if (content == NULL)
+    {
+        printf("Incorrect filename, given filename doesn't exist");
+        exit(EXIT_FAILURE);
+    }
+    printf("File read \n");
+    
+    // read data from the given stream into the array pointed to
+    fread(main_memory, 1, sizeof(main_memory), content);
+    // do
+    // {
+    //     // Reading single character from file
+    //     ch = fgetc(content);
+
+    //     // Print character read on console
+    //     main_memory[0] = ch;
+    //     pointer_rank++;
+
+    //     if (pointer_rank >= sizeof main_memory) {
+    //         printf("Not enough memory");
+    //         break;
+    //     }
+
+        // putchar(ch);
+        // printf("\n");
+    // } while (ch != EOF); //Repeat this if last read character is not EOF
+    
+    // printf(pointer_rank);
+    // printf(main_memory[6]);
+    fclose(content);
+    // {
+    //     /* code */
+    // }
 }
 
 //  -------------------------------------------------------------------
@@ -247,6 +291,9 @@ int main(int argc, char *argv[])
 
 //  READ THE PROVIDED coolexe FILE INTO THE EMULATED MEMORY
     read_coolexe_file(argv[1]);
+
+    for(AWORD loop = 0; loop < 50; loop++)
+        printf("%d ", main_memory[loop]);
 
 //  EXECUTE THE INSTRUCTIONS FOUND IN main_memory[]
     int result = execute_stackmachine();
