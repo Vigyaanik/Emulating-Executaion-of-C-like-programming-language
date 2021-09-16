@@ -122,7 +122,7 @@ int execute_stackmachine(void)
         IWORD value1;
         IWORD value2;
         IWORD offset;
-        AWORD adress_val;
+        AWORD address_val;
 //  FETCH THE NEXT INSTRUCTION TO BE EXECUTED
         IWORD instruction   = read_memory(PC);
         ++PC;
@@ -136,93 +136,89 @@ int execute_stackmachine(void)
 //  SUPPORT OTHER INSTRUCTIONS HERE
 //      ....
         switch (instruction) {
-
-        case I_NOP:
-            /* code */
-
-            break;
-        case I_ADD:
-            value1 = read_memory(SP++);
-            value2 = read_memory(SP);
-            write_memory(SP, value1 + value2);
-            break;
-        case I_SUB:
-            value1 = read_memory(SP++);
-            value2 = read_memory(SP);
-            write_memory(SP, value2 - value1);
-            break;
-        case I_MULT:
-            value1 = read_memory(SP++);
-            value2 = read_memory(SP);
-            write_memory(SP, value1 * value2);
-            break;
-        case I_DIV:
-            value1 = read_memory(SP++);
-            value2 = read_memory(SP);
-            write_memory(SP, value2 / value1);
-            break;
-        case I_CALL:
-            adress_val = read_memory(PC++);
-            write_memory(--SP, PC); 
-            write_memory(--SP, FP);
-            FP = SP;
-            PC = adress_val;
-            break;
-        case I_RETURN:
-            // temp_address = read_memory(PC++);
-            // FP_new = FP + temp_address;
-            adress_val = FP + read_memory(PC++);
-            value1 = read_memory(SP++);
-            SP = FP;
-            FP = read_memory(SP++);
-            PC = read_memory(SP++);
-            SP = adress_val;
-            write_memory(adress_val, value1);
-            break;
-        case I_JMP:
-            PC = read_memory(PC);
-            break;
-        case I_JEQ:
-            value1 = read_memory(SP++);
-            if (value1 == 0)
-            {
+            case I_NOP:
+                break;
+            case I_ADD:
+                value1 = (int16_t) read_memory(SP++);
+                value2 = (int16_t) read_memory(SP);
+                write_memory(SP, value1 + value2);
+                break;
+            case I_SUB:
+                value1 = (int16_t) read_memory(SP++);
+                value2 = (int16_t) read_memory(SP);
+                write_memory(SP, value2 - value1);
+                break;
+            case I_MULT:
+                value1 = (int16_t) read_memory(SP++);
+                value2 = (int16_t) read_memory(SP);
+                write_memory(SP, value1 * value2);
+                break;
+            case I_DIV:
+                value1 = (int16_t) read_memory(SP++);
+                value2 = (int16_t) read_memory(SP);
+                write_memory(SP, value2 / value1);
+                break;
+            case I_CALL:
+                address_val = read_memory(PC++);
+                write_memory(--SP, PC); 
+                write_memory(--SP, FP);
+                FP = SP;
+                PC = address_val;
+                break;
+            case I_RETURN:
+                // temp_address = read_memory(PC++);
+                // FP_new = FP + temp_address;
+                address_val = FP + (int16_t) read_memory(PC++);
+                value1 = (int16_t) read_memory(SP++);
+                SP = FP;
+                FP = read_memory(SP++);
+                PC = read_memory(SP++);
+                SP = address_val;
+                write_memory(address_val, value1);
+                break;
+            case I_JMP:
                 PC = read_memory(PC);
-            }
-            else {
-                PC++;
-            }
-            break;
-        case I_PRINTI:
-            printf("%i", read_memory(SP++));
-            break;
-        case I_PRINTS:
-            break;
-        case I_PUSHC:
-            value1 = read_memory(PC++);
-            write_memory(--SP, value1);
-            break;
-        case I_PUSHA:
-            adress_val = read_memory(PC++);
-            value1 = read_memory(adress_val);
-            write_memory(--SP, adress_val);
-            break;
-        case I_PUSHR:
-            offset = read_memory(PC++);
-            adress_val = FP + offset;
-            value1 = read_memory(adress_val);
-            write_memory(--SP, value1);
-            break;
-        case I_POPA:
-            adress_val = read_memory(PC++);
-            value1 = read_memory(SP++);
-            write_memory(adress_val, value1);
-            break;
-        case I_POPR:
-            offset = read_memory(PC++);
-            adress_val = FP + offset;
-            value1 = read_memory(SP++);
-            write_memory(adress_val, value1);
-            break;
+                break;
+            case I_JEQ:
+                value1 = (int16_t) read_memory(SP++);
+                if (value1 == 0) {
+                    PC = read_memory(PC);
+                }
+                else {
+                    PC++;
+                }
+                break;
+            case I_PRINTI:
+                printf("%i", (int16_t) read_memory(SP++));
+                break;
+            case I_PRINTS:
+                break;
+            case I_PUSHC:
+                value1 = (int16_t) read_memory(PC++);
+                write_memory(--SP, value1);
+                break;
+            case I_PUSHA:
+                address_val = read_memory(PC++);
+                value1 = (int16_t) read_memory(address_val);
+                write_memory(--SP, address_val);
+                break;
+            case I_PUSHR:
+                offset = (int16_t) read_memory(PC++);
+                address_val = FP + offset;
+                value1 = (int16_t) read_memory(address_val);
+                write_memory(--SP, value1);
+                break;
+            case I_POPA:
+                address_val = read_memory(PC++);
+                value1 = (int16_t) read_memory(SP++);
+                write_memory(address_val, value1);
+                break;
+            case I_POPR:
+                offset = (int16_t) read_memory(PC++);
+                address_val = FP + offset;
+                value1 = (int16_t) read_memory(SP++);
+                write_memory(address_val, value1);
+                break;
         }
     }
 
@@ -238,45 +234,18 @@ void read_coolexe_file(char filename[])
     memset(main_memory, 0, sizeof main_memory);   //  clear all memory
 
 //  READ CONTENTS OF coolexe FILE
-    // File pointer to hold reference to our file
-    FILE * content;
-    content = fopen(filename, "r");
-    // char ch;
+    FILE *fp = fopen(filename, "rb");
+    
+    IWORD buffer[1];
+    int read_bytes;
+    int mem_location = 0;
 
-    // fopen() return NULL if last operation was unsuccessful
-    if (content == NULL)
+    while ((read_bytes = fread(buffer, sizeof buffer, 1, fp)) > 0)
     {
-        printf("Incorrect filename, given filename doesn't exist");
-        exit(EXIT_FAILURE);
+        //printf("Read in value: %i at %i\n", buffer[0], mem_location);     //for debugging
+        main_memory[mem_location] = buffer[0];
+        mem_location++;
     }
-    printf("File read \n");
-    
-    // read data from the given stream into the array pointed to
-    fread(main_memory, 1, sizeof(main_memory), content);
-    // do
-    // {
-    //     // Reading single character from file
-    //     ch = fgetc(content);
-
-    //     // Print character read on console
-    //     main_memory[0] = ch;
-    //     pointer_rank++;
-
-    //     if (pointer_rank >= sizeof main_memory) {
-    //         printf("Not enough memory");
-    //         break;
-    //     }
-
-        // putchar(ch);
-        // printf("\n");
-    // } while (ch != EOF); //Repeat this if last read character is not EOF
-    
-    // printf(pointer_rank);
-    // printf(main_memory[6]);
-    fclose(content);
-    // {
-    //     /* code */
-    // }
 }
 
 //  -------------------------------------------------------------------
