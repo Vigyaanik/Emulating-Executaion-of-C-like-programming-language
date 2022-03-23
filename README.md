@@ -1,1 +1,1 @@
-# CITS2002_project_1
+The goal of this project is to emulate the execution of programs from a small, C-like programming language, on a stack-based machine with a write-back cache, and to report some metrics of the program's execution. 
